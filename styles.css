@@ -1,0 +1,109 @@
+body, html {
+    margin: 0;
+    font-family: Verdana;
+}
+
+.main-container {
+    display: block;
+    text-align: center;
+}
+
+footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding: 10px;
+    background-color: coral;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.grid-container {
+    max-width: 410px;
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+
+.square-btn__base {
+    width: 70px;
+    height: 67px;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    font-size: 30px;
+}
+
+.square-btn__front-card {
+    border: 1px solid bisque;
+    background: bisque;
+}
+
+.square-btn__base:active {
+	position: relative;
+    top: 1px;
+}
+
+/* flip the pane when hovered */
+.rotate-onclick {
+    transform: rotateY(180deg);
+}
+
+.flip-container {
+	width: 70px;
+    height: 67px;
+    margin: 6px;
+}
+
+/* flip speed goes here */
+.flipper {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front-card, .back-card {
+	backface-visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front-card {
+	z-index: 2;
+	/* for firefox 31 */
+    transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back-card {
+    transform: rotateY(180deg);
+}
+
+.play-btn {
+    width: 120px;
+    height: 40px;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    background: #fd8254;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    color: #ffffff;
+    margin-top: 30px;
+}
+
+.play-btn:active {
+    position: relative;
+    top: 1px;
+}
+
+.game-timer {
+    margin: 15px;
+}
+
+.game-timer span {
+    font-size: 30px;
+}
