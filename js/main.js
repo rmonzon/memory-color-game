@@ -1,7 +1,11 @@
 // HTML elements
 let gridContainerHTML = null;
 let playButtonHTML = null;
+let addPlayerButtonHTML = null;
 let timerHTML = null;
+let firstScreenContainerHTML = null;
+let secondScreenContainerHTML = null;
+let playerNameInputHTML = null;
 
 // Global variables
 let rows = 4;
@@ -15,8 +19,19 @@ let gridElements = [];
 let hours = 0;
 let minutes = 0;
 let seconds = 0;
+let playerName = '';
 // let colors = generateRandomColors(numberOfColors);
 let colors = ['hotpink', 'darkorchid ', 'purple', 'crimson', 'salmon', 'orange', 'orangered', 'yellow', 'khaki', 'lime', 'green', 'cyan', 'blue', 'maroon', 'black'];
+
+function addPlayerButtonClickHandler (event) {
+    event.preventDefault();
+    if (playerNameInputHTML.value) {
+        playerName = playerNameInputHTML.value;
+        window.localStorage.setItem(playerName, '');
+        firstScreenContainerHTML.classList.add('hidden-section');
+        secondScreenContainerHTML.classList.remove('hidden-section');
+    }
+}
 
 function playButtonClickHandler (event) {
     event.preventDefault();
@@ -66,29 +81,37 @@ function formatTimerOutput(hh, mm, ss) {
 
 function flipperCardOnClickHandler (event) {
     event.preventDefault();
-    event.target.parentElement.classList.toggle('rotate-onclick');
-    selectedSquares.push(Number(event.target.id.split('-')[2]));
-    let selectedSquaresHTML = [];
-    clearTimeout(flipCardsDelayId);
-    if (selectedSquares.length === 2) {
-        if ((colorPairs.has(selectedSquares[0]) && colorPairs.get(selectedSquares[0]) === selectedSquares[1]) 
-            || (colorPairs.has(selectedSquares[1]) && colorPairs.get(selectedSquares[1]) === selectedSquares[0])) {
-            // colors matched! keep them flipped
-            selectedSquaresHTML = [gridElements[selectedSquares[0]], gridElements[selectedSquares[1]]];
-            selectedSquaresHTML.map(el => el.lastElementChild.disabled = true);
-            selectedSquares = [];
-            if (hasWonGame()) {
-                // user won the game!
-                stopTimer();
+    if (!event.target.parentElement.classList.contains('rotate-onclick')) {
+        event.target.parentElement.classList.toggle('rotate-onclick');
+        selectedSquares.push(Number(event.target.id.split('-')[2]));
+        let selectedSquaresHTML = [];
+        clearTimeout(flipCardsDelayId);
+        if (selectedSquares.length === 2) {
+            if ((colorPairs.has(selectedSquares[0]) && colorPairs.get(selectedSquares[0]) === selectedSquares[1]) 
+                || (colorPairs.has(selectedSquares[1]) && colorPairs.get(selectedSquares[1]) === selectedSquares[0])) {
+                // colors matched! keep them flipped
+                selectedSquaresHTML = [gridElements[selectedSquares[0]], gridElements[selectedSquares[1]]];
+                selectedSquaresHTML.map(el => el.lastElementChild.disabled = true);
+                selectedSquares = [];
+                if (hasWonGame()) {
+                    // user won the game!
+                    stopTimer();
+                    // add time to scoreboard, check if current time is better than the one saved
+                    const savedTime = window.localStorage.getItem(playerName);
+                    const currentTime = timerHTML.innerHTML;
+                    if (savedTime < currentTime) {
+                        window.localStorage.setItem(playerName, currentTime);
+                    }
+                }
+            } else {
+                selectedSquaresHTML = [gridElements[selectedSquares[0]], gridElements[selectedSquares[1]]];
+                // wrong color pair selection, flip both cards
+                flipCardsDelayId = setTimeout(() => {
+                    toggleCards(...selectedSquaresHTML);
+                }, 600);
             }
-        } else {
-            selectedSquaresHTML = [gridElements[selectedSquares[0]], gridElements[selectedSquares[1]]];
-            // wrong color pair selection, flip both cards
-            flipCardsDelayId = setTimeout(() => {
-                toggleCards(...selectedSquaresHTML);
-            }, 800);
+            selectedSquares = [];
         }
-        selectedSquares = [];
     }
 }
 
@@ -197,6 +220,22 @@ function setColorsToGrid() {
     }
 }
 
+function buildScoresTable() {
+    const users = window.localStorage;
+    const table = document.getElementsByTagName('table')[0];
+    for (let i = 0, length = users.length; i < length; i++) {
+        const row = document.createElement('tr');
+        const col1 = document.createElement('td');
+        const player = users.key(i);
+        col1.innerHTML = player;
+        const col2 = document.createElement('td');
+        col2.innerHTML = users.getItem(player);
+        row.appendChild(col1);
+        row.appendChild(col2);
+        table.appendChild(row);
+    }
+}
+
 function enableGrid() {
     gridElements.map(square => square.firstChild.disabled = false);
 }
@@ -212,10 +251,16 @@ function initHTMLVariables () {
     gridContainerHTML = document.querySelector('.grid-container');
     playButtonHTML = document.querySelector('.play-btn');
     timerHTML = document.querySelector('#timer');
+    firstScreenContainerHTML = document.querySelector('.first-screen-container');
+    secondScreenContainerHTML = document.querySelector('.second-screen-container');
+    addPlayerButtonHTML = document.querySelector('.add-player-btn');
+    playerNameInputHTML = document.querySelector('.player-name-input');
     playButtonHTML.onclick = playButtonClickHandler;
+    addPlayerButtonHTML.onclick = addPlayerButtonClickHandler;
 }
 
 document.addEventListener("DOMContentLoaded", function (event) {
     initHTMLVariables();
+    buildScoresTable();
     createGrid(rows, cols);
 });
