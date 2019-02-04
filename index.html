@@ -19,19 +19,35 @@
         <header></header>
 
         <main class="main-container">
-            <div class="game-timer">
-                <span id="timer">00:00:00</span>
-            </div>
-            <div class="grid-container">
-                
-            </div>
-            <div class="controls">
-                <button class="play-btn">Start Game</button>
-            </div>
+            <section class="first-screen-container">
+                <h1>Welcome to Memory Game</h1>
+                <input placeholder="Player name" class="player-name-input" type="text" required />
+                <button class="add-player-btn">Add player</button>
+
+                <table> 
+                    <tr> 
+                        <th>Player</th> 
+                        <th>Best time</th> 
+                    </tr>
+                </table>
+            </section>
+
+            <section class="second-screen-container hidden-section">
+                <div class="game-timer">
+                    <span id="timer">00:00:00</span>
+                </div>
+                <div class="grid-container">
+                    
+                </div>
+                <div class="controls">
+                    <button class="play-btn">Start Game</button>
+                </div>
+            </section>
         </main>
 
         <footer>Developed by Raul Rivero - 2019</footer>
         
         <script src="js/main.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     </body>
 </html>
