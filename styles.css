@@ -107,3 +107,37 @@ footer {
 .game-timer span {
     font-size: 30px;
 }
+
+.hidden-section {
+    visibility: hidden;
+}
+
+.player-name-input {
+    width: 130px;
+    outline: none;
+    padding: 5px;
+    height: 16px;
+}
+
+.add-player-btn {
+    width: 120px;
+    height: 30px;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    background: #fd8254;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    color: #ffffff;
+}
+
+table {
+    width: 50%;
+    margin: 50px auto 0 auto;
+    border: 1px solid #000;
+}
+
+table th {
+    background: lightgray;
+}
